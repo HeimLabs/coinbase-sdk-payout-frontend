@@ -2,6 +2,7 @@
 
 :root {
     color-scheme: light;
+    background-color: #fbfbfb;
     font-family: 'Roboto', sans-serif;
     font-synthesis: none;
     font-weight: 400;
@@ -16,5 +17,10 @@
 
 h1 {
     font-size: xx-large;
+    margin: 0;
+}
+
+h2 {
+    font-weight: 300;
     margin: 0;
 }

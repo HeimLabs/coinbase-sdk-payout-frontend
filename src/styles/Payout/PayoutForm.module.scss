@@ -1,0 +1,137 @@
+@import '../_variables.scss';
+@import '../_animations.scss';
+
+.main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 40px;
+
+    form {
+        width: 50%;
+    }
+
+    .balanceContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
+        width: 50%;
+
+        span {
+            color: $coinbase-blue;
+        }
+    }
+
+    .formContainer {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .formRows {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+
+            .row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+
+                .inputContainer {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: start;
+                    justify-content: space-between;
+                    width: 45%;
+
+                    span {
+                        font-weight: 700;
+                    }
+
+                    input {
+                        width: 100%;
+                        padding: 10px;
+                        border-radius: 5px;
+                        border: 2px solid lightgray;
+                        outline: none;
+                    }
+                }
+
+            }
+
+            .addBttn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px;
+                margin: 20px;
+
+                img {
+                    height: 20px;
+                    width: auto;
+                }
+            }
+        }
+    }
+}
+
+.csvBttn {
+    border: none;
+    outline: none;
+    background-color: rgb(228, 228, 228);
+    color: black;
+    font-weight: 700;
+    font-size: medium;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: rgb(204, 204, 204);
+    }
+}
+
+.primaryBttn {
+    border: none;
+    outline: none;
+    background-color: $coinbase-blue;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: lighten($coinbase-blue,20%);
+    }
+}
+
+.secondaryBttn {
+    border: none;
+    outline: none;
+    background-color: rgb(228, 228, 228);
+    color: black;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: rgb(204, 204, 204);
+    }
+}
