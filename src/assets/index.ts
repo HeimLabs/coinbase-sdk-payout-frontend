@@ -1,0 +1,1 @@
+export { default as logoutIcon } from "./logout.png";
