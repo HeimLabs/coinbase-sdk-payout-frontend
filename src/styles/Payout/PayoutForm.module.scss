@@ -76,17 +76,24 @@
 
             }
 
-            .addBttn {
+            .rowActions {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 10px;
-                margin: 20px;
 
-                img {
-                    height: 20px;
-                    width: auto;
+                .addBttn {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 10px;
+                    margin: 20px;
+
+                    img {
+                        height: 20px;
+                        width: auto;
+                    }
                 }
+
             }
         }
     }
@@ -118,7 +125,7 @@
     cursor: pointer;
 
     &:hover {
-        background-color: lighten($coinbase-blue,20%);
+        background-color: lighten($coinbase-blue, 20%);
     }
 }
 
