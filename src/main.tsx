@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom/client'
 import { WagmiProvider } from 'wagmi'
 import App from './App.tsx'
 import { config } from './configs/wagmi.config.ts'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import './styles/global.scss'

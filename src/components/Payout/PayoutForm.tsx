@@ -14,8 +14,6 @@ export default function PayoutForm(): React.JSX.Element {
     const [isLoading, setIsLoading] = useState(false);
     const [file, setFile] = useState<File>();
 
-    const fileReader = new FileReader();
-
     const uploadCsvRef = useRef<HTMLInputElement>(null);
 
     const { tokenBalance } = useTokenBalance();
