@@ -1,17 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "../../styles/Payout/PayoutForm.module.scss";
 import { useBatchPayout, useTokenBalance } from "../../hooks/token.hooks";
 import { addIcon, subtractIcon } from "../../assets";
 import { toast } from "react-toastify";
 import { FormRow } from "../../types";
-import { useWaitForTransactionReceipt } from "wagmi";
 import { useCallsStatus } from "wagmi/experimental";
+import Papa from "papaparse";
 
 export default function PayoutForm(): React.JSX.Element {
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(0);
     const [rows, setRows] = useState<FormRow[]>([{ wallet: '', amount: '' }]);
     const [total, setTotal] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
+    const [file, setFile] = useState<File>();
+
+    const fileReader = new FileReader();
+
+    const uploadCsvRef = useRef<HTMLInputElement>(null);
 
     const { tokenBalance } = useTokenBalance();
     const { batchPayout, txHash, isPending, isSuccess } = useBatchPayout(rows);
@@ -23,19 +28,6 @@ export default function PayoutForm(): React.JSX.Element {
         newRows[index][name as keyof FormRow] = value;
         setRows(newRows);
     };
-
-    const addRow = () => {
-        if (rows.length <= 5)
-            setRows([...rows, { wallet: '', amount: '' }]);
-        else
-            toast.error("Too many rows!");
-    };
-
-    const removeRow = () => {
-        const newRows = [...rows];
-        newRows.pop();
-        setRows(newRows);
-    }
 
     const handleSubmit = (e: React.FormEvent) => {
         try {
@@ -62,33 +54,81 @@ export default function PayoutForm(): React.JSX.Element {
         }
     }
 
+    const handleCsvUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files)
+            setFile(e.target.files[0]);
+    }
+
+    const handleCsvDownload = () => {
+        try {
+            const csvString = Papa.unparse(rows, {
+                header: true,
+            });
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'data.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (err) {
+            console.error("Failed to download: ", err);
+            toast.error("Failed to download CSV!");
+        }
+    }
+
+    const addRow = () => {
+        if (rows.length <= 5)
+            setRows([...rows, { wallet: '', amount: '' }]);
+        else
+            toast.error("Too many rows!");
+    };
+
+    const removeRow = () => {
+        const newRows = [...rows];
+        newRows.pop();
+        setRows(newRows);
+    }
+
+    // Parse and set CSV
+    useEffect(() => {
+        if (file)
+            Papa.parse(file, {
+                header: false,
+                skipEmptyLines: true,
+                complete: (results) => {
+                    const parsedRows = results.data.map((row: any) => ({
+                        wallet: row[0],
+                        amount: row[1],
+                    })).slice(0, 6);
+                    setRows(parsedRows);
+                },
+            });
+    }, [file])
+
+    // Calculate total amount when row is updated
     useEffect(() => {
         const _total = rows.reduce((sum, row) => sum + parseFloat(row.amount || '0'), 0);
         setTotal(_total);
     }, [rows])
 
+    // Manage common loading state
     useEffect(() => {
-        // console.log("isPending: ", isPending);
-        // console.log("isFetching: ", isFetching);
         if (isPending || (txHash && isFetching))
             setIsLoading(true);
         else
             setIsLoading(false);
     }, [isPending, isFetching]);
 
+    // Track payout transaction
     useEffect(() => {
-        // console.log("isFetching: ", isFetching);
-        // console.log("isFetched: ", isFetched);
-        // console.log("isSuccess: ", isSuccess);
         if (!isFetching && txHash && isFetched && isSuccess) {
             toast.success("Payout successful!");
             setStep(2);
         }
     }, [isFetching, isFetched, isSuccess]);
-
-    // useEffect(() => {
-    //     console.log("rows: ", rows);
-    // }, [rows])
 
     return (
         <div className={styles.main}>
@@ -103,7 +143,19 @@ export default function PayoutForm(): React.JSX.Element {
                 {step == 0 &&
                     <div className={styles.header}>
                         <span>Enter Recipients & Amounts</span>
-                        <button className={styles.csvBttn}>Or upload CSV file</button>
+                        <input
+                            type="file"
+                            accept=".csv"
+                            onChange={handleCsvUpload}
+                            className={styles.csvBttn}
+                            style={{ display: 'none' }}
+                            ref={uploadCsvRef}
+                        />
+                        <button className={styles.csvBttn} onClick={() => {
+                            uploadCsvRef.current?.click();
+                        }}>
+                            {file ? file.name : "Or upload CSV file"}
+                        </button>
                     </div>}
                 {/* STEP - 1 */}
                 {step == 1 &&
@@ -174,6 +226,10 @@ export default function PayoutForm(): React.JSX.Element {
                         <button type="submit" className={`${styles.primaryBttn} ${isLoading ? styles.shimmer : ""}`}>
                             {step == 0 && "Next"}
                             {step == 1 && "Confirm"}
+                        </button>}
+                    {step == 2 &&
+                        <button className={styles.csvBttn} onClick={handleCsvDownload}>
+                            Download CSV
                         </button>}
                     {(step == 1 || step == 2) &&
                         <button type="reset" className={styles.secondaryBttn}>
