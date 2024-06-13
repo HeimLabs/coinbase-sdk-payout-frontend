@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { FormRow } from "../../types";
 import { useCallsStatus } from "wagmi/experimental";
 import Papa from "papaparse";
+import { tokens } from "../../configs/tokens.config";
 
 export default function PayoutForm(): React.JSX.Element {
     const [step, setStep] = useState(0);
@@ -13,11 +14,12 @@ export default function PayoutForm(): React.JSX.Element {
     const [total, setTotal] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [file, setFile] = useState<File>();
+    const [selectedToken, setSelectedToken] = useState(tokens[0]);
 
     const uploadCsvRef = useRef<HTMLInputElement>(null);
 
-    const { tokenBalance } = useTokenBalance();
-    const { batchPayout, txHash, isPending, isSuccess } = useBatchPayout(rows);
+    const { tokenBalance } = useTokenBalance(selectedToken);
+    const { batchPayout, txHash, isPending, isSuccess } = useBatchPayout(rows, selectedToken);
     const { isFetched, isFetching } = useCallsStatus({ id: txHash as string });
 
     const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +79,10 @@ export default function PayoutForm(): React.JSX.Element {
         }
     }
 
+    const handleTokenSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedToken(tokens[Number(e.target.value)]);
+    }
+
     const addRow = () => {
         if (rows.length <= 5)
             setRows([...rows, { wallet: '', amount: '' }]);
@@ -133,7 +139,14 @@ export default function PayoutForm(): React.JSX.Element {
             <div className={styles.balanceContainer}>
                 <div className={styles.balance}>
                     <h2>Your Wallet Balance:</h2>
-                    <span>TestToken: {tokenBalance.toLocaleString()} $TT</span>
+                    <span>
+                        <select name="token" id="token" onChange={handleTokenSelection} disabled={step != 0}>
+                            {tokens.map((token, index) => (
+                                <option value={index}>{token.name}</option>
+                            ))}
+                        </select>
+                        : {tokenBalance.toLocaleString()} {selectedToken.symbol}
+                    </span>
                 </div>
             </div>
             <div className={styles.formContainer}>
@@ -185,7 +198,7 @@ export default function PayoutForm(): React.JSX.Element {
                             </div>}
                             {/* AMOUNT */}
                             {step == 0 && <div className={styles.inputContainer}>
-                                <span className={styles.rowHeader}>$TT:</span>
+                                <span className={styles.rowHeader}>{selectedToken.symbol}:</span>
                                 <input
                                     type="number"
                                     name="amount"
@@ -196,7 +209,7 @@ export default function PayoutForm(): React.JSX.Element {
                                 />
                             </div>}
                             {(step == 1 || step == 2) && <div className={styles.inputContainer}>
-                                <span className={`${styles.amounts} ${step == 1 ? styles.confirmed : styles.success}`}>{row.amount} $TT</span>
+                                <span className={`${styles.amounts} ${step == 1 ? styles.confirmed : styles.success}`}>{row.amount} {selectedToken.symbol}</span>
                             </div>}
                         </div>
                     ))}
@@ -206,7 +219,7 @@ export default function PayoutForm(): React.JSX.Element {
                                 <h2>Total Payments</h2>
                             </div>
                             <div className={styles.inputContainer}>
-                                <h2 className={`${styles.amounts} ${step == 1 ? styles.confirmed : styles.success}`}>{total.toLocaleString()} $TT</h2>
+                                <h2 className={`${styles.amounts} ${step == 1 ? styles.confirmed : styles.success}`}>{total.toLocaleString()} {selectedToken.symbol}</h2>
                             </div>
                         </div>
                     }
