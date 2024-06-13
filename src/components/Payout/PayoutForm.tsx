@@ -10,6 +10,7 @@ import { useCallsStatus } from "wagmi/experimental";
 export default function PayoutForm(): React.JSX.Element {
     const [step, setStep] = useState(1);
     const [rows, setRows] = useState<FormRow[]>([{ wallet: '', amount: '' }]);
+    const [total, setTotal] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
 
     const { tokenBalance } = useTokenBalance();
@@ -62,8 +63,13 @@ export default function PayoutForm(): React.JSX.Element {
     }
 
     useEffect(() => {
-        console.log("isPending: ", isPending);
-        console.log("isFetching: ", isFetching);
+        const _total = rows.reduce((sum, row) => sum + parseFloat(row.amount || '0'), 0);
+        setTotal(_total);
+    }, [rows])
+
+    useEffect(() => {
+        // console.log("isPending: ", isPending);
+        // console.log("isFetching: ", isFetching);
         if (isPending || (txHash && isFetching))
             setIsLoading(true);
         else
@@ -71,10 +77,10 @@ export default function PayoutForm(): React.JSX.Element {
     }, [isPending, isFetching]);
 
     useEffect(() => {
-        console.log("isFetching: ", isFetching);
-        console.log("isFetched: ", isFetched);
-        console.log("isSuccess: ", isSuccess);
-        if (!isFetching && isFetched && isSuccess) {
+        // console.log("isFetching: ", isFetching);
+        // console.log("isFetched: ", isFetched);
+        // console.log("isSuccess: ", isSuccess);
+        if (!isFetching && txHash && isFetched && isSuccess) {
             toast.success("Payout successful!");
             setStep(2);
         }
@@ -102,18 +108,19 @@ export default function PayoutForm(): React.JSX.Element {
                 {/* STEP - 1 */}
                 {step == 1 &&
                     <div className={styles.header}>
-                        <span>Review & Confirm Payout Amounts</span>
+                        <h2>Review & Confirm Payout Amounts</h2>
                     </div>}
                 {/* STEP - 2 */}
                 {step == 2 &&
                     <div className={styles.header}>
-                        <span>Payouts Confirmed</span>
+                        <h2>Payouts Confirmed</h2>
                     </div>}
                 <form className={styles.formRows} onSubmit={handleSubmit} onReset={handleCancel}>
                     {rows.map((row, index) => (
                         <div className={styles.row} key={index}>
-                            <div className={styles.inputContainer}>
-                                <span>Wallet Address:</span>
+                            {/* WALLET ADDRESS */}
+                            {step == 0 && <div className={styles.inputContainer}>
+                                <span className={styles.rowHeader}>Wallet Address:</span>
                                 <input
                                     type="text"
                                     name="wallet"
@@ -122,9 +129,13 @@ export default function PayoutForm(): React.JSX.Element {
                                     required
                                     onChange={(e) => handleInputChange(index, e)}
                                 />
-                            </div>
-                            <div className={styles.inputContainer}>
-                                <span>$TT:</span>
+                            </div>}
+                            {(step == 1 || step == 2) && <div className={styles.inputContainer}>
+                                {row.wallet?.slice(0, 7) + "..." + row.wallet?.slice(-7)}
+                            </div>}
+                            {/* AMOUNT */}
+                            {step == 0 && <div className={styles.inputContainer}>
+                                <span className={styles.rowHeader}>$TT:</span>
                                 <input
                                     type="number"
                                     name="amount"
@@ -133,9 +144,22 @@ export default function PayoutForm(): React.JSX.Element {
                                     required
                                     onChange={(e) => handleInputChange(index, e)}
                                 />
-                            </div>
+                            </div>}
+                            {(step == 1 || step == 2) && <div className={styles.inputContainer}>
+                                <span className={`${styles.amounts} ${step == 1 ? styles.confirmed : styles.success}`}>{row.amount} $TT</span>
+                            </div>}
                         </div>
                     ))}
+                    {(step == 1 || step == 2) &&
+                        <div className={styles.row}>
+                            <div className={styles.inputContainer}>
+                                <h2>Total Payments</h2>
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <h2 className={`${styles.amounts} ${step == 1 ? styles.confirmed : styles.success}`}>{total.toLocaleString()} $TT</h2>
+                            </div>
+                        </div>
+                    }
                     <div className={styles.rowActions}>
                         {(step == 0 && rows.length <= 5) &&
                             <button type="button" className={`${styles.csvBttn} ${styles.addBttn}`} onClick={addRow}>

@@ -10,6 +10,10 @@
     box-sizing: border-box;
     padding: 40px;
 
+    h2 {
+        font-weight: 500;
+    }
+
     form {
         width: 50%;
     }
@@ -61,7 +65,7 @@
                     justify-content: space-between;
                     width: 45%;
 
-                    span {
+                    .rowHeader {
                         font-weight: 700;
                     }
 
@@ -71,6 +75,16 @@
                         border-radius: 5px;
                         border: 2px solid lightgray;
                         outline: none;
+                    }
+
+                    .amounts {
+                        &.confirmed {
+                            color: $coinbase-blue;
+                        }
+
+                        &.success {
+                            color: rgb(2, 201, 2);
+                        }
                     }
                 }
 
