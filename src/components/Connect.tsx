@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "../styles/Connect.module.scss";
-import { useConnect } from "wagmi";
 import { useWallet } from "../context/wallet.context";
 
 export default function Connect(): React.JSX.Element {

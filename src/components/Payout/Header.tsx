@@ -1,12 +1,10 @@
 import React from "react";
 import styles from "../../styles/Payout/Header.module.scss";
-import { useAccount, useDisconnect } from "wagmi";
 import { toast } from "react-toastify";
-import { logoutIcon } from "../../assets";
+import { useWallet } from "../../context/wallet.context";
 
 export default function Header(): React.JSX.Element {
-    const { address, chain } = useAccount();
-    const { disconnect, isPending } = useDisconnect();
+    const { address, chain } = useWallet();
 
     const copyToClipboard = () => {
         try {
@@ -23,14 +21,11 @@ export default function Header(): React.JSX.Element {
             <div className={styles.walletContainer}>
                 <div
                     onClick={copyToClipboard}
-                    className={`${styles.address} ${isPending ? styles.shimmer : ""}`}>
+                    className={`${styles.address}`}>
                     {address?.slice(0, 5) + "..." + address?.slice(-5)}
                 </div>
                 <div className={styles.details}>
-                    <span>Network: {chain?.name}</span>
-                    <button className={styles.logoutBttn} onClick={() => { disconnect(); }}>
-                        <img src={logoutIcon} alt="Logout" />
-                    </button>
+                    <span>Network: {chain}</span>
                 </div>
             </div>
         </div>
