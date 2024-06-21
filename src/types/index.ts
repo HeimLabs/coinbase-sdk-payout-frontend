@@ -8,11 +8,11 @@ export interface FormRow {
 
 export type TWalletContext = {
     isConnected: boolean,
-    address: string | null,
-    chain: string | null,
+    address: string | undefined,
+    chain: string | undefined,
     isWalletLoading: boolean,
     walletError: Error | null,
-    connect: ((options?: RefetchOptions) => Promise<QueryObserverResult<any, Error>>) | null
+    connect: ((options?: RefetchOptions) => Promise<QueryObserverResult<any, Error>>) | undefined
 }
 
 export type Props = {

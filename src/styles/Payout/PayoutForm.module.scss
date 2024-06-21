@@ -86,6 +86,17 @@
                             color: rgb(2, 201, 2);
                         }
                     }
+
+                    &.explorer {
+                        flex-direction: row;
+                        justify-content: start;
+                        gap: 20px;
+
+                        img {
+                            height: 20px;
+                            width: auto;
+                        }
+                    }
                 }
 
             }

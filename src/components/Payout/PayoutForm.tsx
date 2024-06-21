@@ -1,26 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "../../styles/Payout/PayoutForm.module.scss";
-import { useBatchPayout, useTokenBalance } from "../../hooks/token.hooks";
-import { addIcon, subtractIcon } from "../../assets";
+import { useTokenBalance } from "../../hooks/token.hooks";
+import { addIcon, basescanIcon, crossIcon, subtractIcon } from "../../assets";
 import { toast } from "react-toastify";
 import { FormRow } from "../../types";
-import { useCallsStatus } from "wagmi/experimental";
 import Papa from "papaparse";
 import { tokens } from "../../configs/tokens.config";
+import { useBatchPayout } from "../../hooks/wallet.hooks";
 
 export default function PayoutForm(): React.JSX.Element {
     const [step, setStep] = useState(0);
     const [rows, setRows] = useState<FormRow[]>([{ wallet: '', amount: '' }]);
     const [total, setTotal] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
     const [file, setFile] = useState<File>();
     const [selectedToken, setSelectedToken] = useState(tokens[0]);
 
     const uploadCsvRef = useRef<HTMLInputElement>(null);
 
     const { tokenBalance } = useTokenBalance(selectedToken);
-    const { batchPayout, txHash, isPending, isSuccess } = useBatchPayout(rows, selectedToken);
-    const { isFetched, isFetching } = useCallsStatus({ id: txHash as string });
+    const { mutate: batchPayout, data: batchPayoutData, isPending, isSuccess, reset } = useBatchPayout(rows, selectedToken);
 
     const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -48,7 +46,14 @@ export default function PayoutForm(): React.JSX.Element {
     const handleCancel = (e: React.FormEvent) => {
         try {
             e.preventDefault();
-            setStep(0);
+            if (step == 1) {
+                setStep(0);
+            }
+            else if (step == 2) {
+                setStep(0);
+                reset();
+                setRows([{ wallet: '', amount: '' }]);
+            }
         } catch (err) {
             toast.error("Something went wrong!")
         }
@@ -118,21 +123,18 @@ export default function PayoutForm(): React.JSX.Element {
         setTotal(_total);
     }, [rows])
 
-    // Manage common loading state
-    useEffect(() => {
-        if (isPending || (txHash && isFetching))
-            setIsLoading(true);
-        else
-            setIsLoading(false);
-    }, [isPending, isFetching]);
-
     // Track payout transaction
     useEffect(() => {
-        if (!isFetching && txHash && isFetched && isSuccess) {
+        console.log("data: ", batchPayoutData);
+        if (!isPending && isSuccess) {
             toast.success("Payout successful!");
             setStep(2);
         }
-    }, [isFetching, isFetched, isSuccess]);
+    }, [isPending, isSuccess]);
+
+    useEffect(() => {
+        console.log("batchPayoutData: ", batchPayoutData);
+    }, [batchPayoutData])
 
     return (
         <div className={styles.main}>
@@ -141,9 +143,9 @@ export default function PayoutForm(): React.JSX.Element {
                     <h2>Your Wallet Balance:</h2>
                     <span>
                         <select name="token" id="token" onChange={handleTokenSelection} disabled={step != 0}>
-                            {tokens.map((token, index) => (
-                                <option value={index}>{token.name}</option>
-                            ))}
+                            {/* {tokens.map((token, index) => ( */}
+                            <option value={0}>{tokens[0].name}</option>
+                            {/* ))} */}
                         </select>
                         : {tokenBalance.toLocaleString()} {selectedToken.symbol}
                     </span>
@@ -193,9 +195,20 @@ export default function PayoutForm(): React.JSX.Element {
                                     onChange={(e) => handleInputChange(index, e)}
                                 />
                             </div>}
-                            {(step == 1 || step == 2) && <div className={styles.inputContainer}>
-                                {row.wallet?.slice(0, 7) + "..." + row.wallet?.slice(-7)}
-                            </div>}
+                            {(step == 1 || step == 2) &&
+                                <div
+                                    className={styles.inputContainer + " " + styles.explorer}
+                                    style={batchPayoutData?.transferStatus[index] === "failed" ? { "color": "red" } : {}}
+                                >
+                                    {step === 2 && batchPayoutData?.transferStatus
+                                        ? (batchPayoutData.transferStatus[index] === "failed"
+                                            ? (<img src={crossIcon} alt="failed" />)
+                                            : (<a href={batchPayoutData.transferStatus[index]} target="_blank" rel="noopener noreferrer">
+                                                <img src={basescanIcon} alt="basescan" />
+                                            </a>))
+                                        : null}
+                                    {row.wallet?.slice(0, 7) + "..." + row.wallet?.slice(-7)}
+                                </div>}
                             {/* AMOUNT */}
                             {step == 0 && <div className={styles.inputContainer}>
                                 <span className={styles.rowHeader}>{selectedToken.symbol}:</span>
@@ -209,7 +222,12 @@ export default function PayoutForm(): React.JSX.Element {
                                 />
                             </div>}
                             {(step == 1 || step == 2) && <div className={styles.inputContainer}>
-                                <span className={`${styles.amounts} ${step == 1 ? styles.confirmed : styles.success}`}>{row.amount} {selectedToken.symbol}</span>
+                                <span
+                                    className={`${styles.amounts} ${step == 1 ? styles.confirmed : styles.success}`}
+                                    style={batchPayoutData?.transferStatus[index] === "failed" ? { "color": "red" } : {}}
+                                >
+                                    {row.amount} {selectedToken.symbol}
+                                </span>
                             </div>}
                         </div>
                     ))}
@@ -234,7 +252,7 @@ export default function PayoutForm(): React.JSX.Element {
                             </button>}
                     </div>
                     {(step == 0 || step == 1) &&
-                        <button type="submit" className={`${styles.primaryBttn} ${isLoading ? styles.shimmer : ""}`}>
+                        <button type="submit" className={`${styles.primaryBttn} ${isPending ? styles.shimmer : ""}`}>
                             {step == 0 && "Next"}
                             {step == 1 && "Confirm"}
                         </button>}
