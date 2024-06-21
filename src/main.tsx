@@ -4,6 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { WagmiProvider } from 'wagmi'
 import App from './App.tsx'
+import WalletProvider from './context/wallet.context.tsx'
 import { config } from './configs/wagmi.config.ts'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,9 +19,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
-                <App />
+                <WalletProvider>
+                    <App />
+                </WalletProvider>
             </QueryClientProvider>
         </WagmiProvider>
-        <ToastContainer  position='top-center' stacked/>
+        <ToastContainer position='top-center' stacked />
     </React.StrictMode>,
 )

@@ -1,11 +1,11 @@
-import { useAccount } from 'wagmi'
 import Connect from './components/Connect'
 import Payout from './components/Payout'
+import { useWallet } from './context/wallet.context'
 
 function App() {
-    const account = useAccount()
+    const { isConnected } = useWallet();
 
-    if (!account.isConnected)
+    if (!isConnected)
         return (<Connect />)
     else
         return (<Payout />)

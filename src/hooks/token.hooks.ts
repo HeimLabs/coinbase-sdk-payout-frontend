@@ -2,7 +2,6 @@ import { useAccount, useBalance, useReadContract } from "wagmi";
 import { erc20Abi } from "viem";
 import { useSendCalls, useWriteContracts } from "wagmi/experimental";
 import { FormRow } from "../types";
-import { contracts } from "../configs/contracts.config";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { tokens } from "../configs/tokens.config";
@@ -12,7 +11,7 @@ const useTokenBalance = (selectedToken: typeof tokens[number]) => {
     const { data: nativeBalance, } = useBalance({ address });
     const { data, ...readData } = useReadContract({
         abi: erc20Abi,
-        address: contracts.token as `0x${string}`,
+        address: selectedToken.address as `0x${string}`,
         functionName: "balanceOf",
         args: [address as `0x${string}`]
     });
