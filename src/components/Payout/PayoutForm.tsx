@@ -132,10 +132,6 @@ export default function PayoutForm(): React.JSX.Element {
         }
     }, [isPending, isSuccess]);
 
-    useEffect(() => {
-        console.log("batchPayoutData: ", batchPayoutData);
-    }, [batchPayoutData])
-
     return (
         <div className={styles.main}>
             <div className={styles.balanceContainer}>
@@ -143,9 +139,9 @@ export default function PayoutForm(): React.JSX.Element {
                     <h2>Your Wallet Balance:</h2>
                     <span>
                         <select name="token" id="token" onChange={handleTokenSelection} disabled={step != 0}>
-                            {/* {tokens.map((token, index) => ( */}
-                            <option value={0}>{tokens[0].name}</option>
-                            {/* ))} */}
+                            {tokens.map((token, index) => (
+                            <option value={index}>{token.name}</option>
+                            ))}
                         </select>
                         : {tokenBalance.toLocaleString()} {selectedToken.symbol}
                     </span>

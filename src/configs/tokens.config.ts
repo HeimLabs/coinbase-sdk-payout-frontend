@@ -5,8 +5,8 @@ export const tokens = [
         address: "0x0000000000000000000000000000000000000000"
     },
     {
-        name: "TestToken",
-        symbol: "$TT",
-        address: "0x5a18cdACC0275f0F4267515695540459a286E6F2"
+        name: "USDC",
+        symbol: "$USDC",
+        address: "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
     }
 ]
