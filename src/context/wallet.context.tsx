@@ -22,11 +22,16 @@ const WalletProvider = ({ children }: Props): React.JSX.Element => {
     const getWalletQuery = useGetWallet();
 
     useEffect(() => {
-        const { data } = getWalletQuery;
+        const { data, isError } = getWalletQuery;
         if (data) {
             setIsConnected(true);
             setAddress(data.address);
             setChain(data.chain);
+        }
+        if (isError) {
+            setIsConnected(false);
+            setAddress(undefined);
+            setChain(undefined);
         }
     }, [getWalletQuery]);
 

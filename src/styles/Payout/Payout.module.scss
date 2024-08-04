@@ -6,6 +6,28 @@
 
     .inner {
         width: 100%;
-        max-width: 1400px;
+        max-width: 900px;
+
+        &.wider {
+            max-width: 1000px;
+        }
+
+        .toolbar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+
+            img {
+                width: 30px;
+                height: auto;
+                opacity: 0.5;
+
+                &:hover {
+                    opacity: 1;
+                    cursor: pointer;
+                }
+            }
+        }
     }
 }

@@ -5,10 +5,10 @@
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: space-between;
     box-sizing: border-box;
-    padding: 40px;
+    margin-top: 20px;
 
     h2 {
         font-weight: 500;
@@ -23,7 +23,7 @@
         flex-direction: column;
         align-items: start;
         justify-content: center;
-        width: 50%;
+        width: 40%;
 
         span {
             color: $coinbase-blue;
@@ -31,7 +31,7 @@
     }
 
     .formContainer {
-        width: 50%;
+        width: 60%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -51,6 +51,8 @@
             align-items: center;
             width: 100%;
             gap: 10px;
+            max-height: 60vh;
+            overflow-x: scroll;
 
             .row {
                 display: flex;
@@ -63,18 +65,24 @@
                     flex-direction: column;
                     align-items: start;
                     justify-content: space-between;
-                    width: 45%;
+                    width: 48%;
 
                     .rowHeader {
                         font-weight: 700;
+
+                        span {
+                            font-size: 12px;
+                            font-weight: 400;
+                        }
                     }
 
                     input {
-                        width: 100%;
                         padding: 10px;
                         border-radius: 5px;
                         border: 2px solid lightgray;
                         outline: none;
+                        width: 100%;
+                        box-sizing: border-box;
                     }
 
                     .amounts {
@@ -84,17 +92,6 @@
 
                         &.success {
                             color: rgb(2, 201, 2);
-                        }
-                    }
-
-                    &.explorer {
-                        flex-direction: row;
-                        justify-content: start;
-                        gap: 20px;
-
-                        img {
-                            height: 20px;
-                            width: auto;
                         }
                     }
                 }
@@ -120,6 +117,10 @@
                 }
 
             }
+        }
+
+        .errorMsg {
+            color: red;
         }
     }
 }
@@ -151,6 +152,11 @@
 
     &:hover {
         background-color: lighten($coinbase-blue, 20%);
+    }
+
+    &:disabled {
+        background-color: lighten($coinbase-blue, 20%);
+        pointer-events: none;
     }
 }
 

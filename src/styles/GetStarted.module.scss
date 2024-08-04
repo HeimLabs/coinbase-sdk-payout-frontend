@@ -5,11 +5,11 @@
     width: 100%;
     max-width: 900px;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     text-align: center;
-    flex-wrap: wrap;
 
     .header {
         display: flex;
@@ -35,7 +35,7 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
         margin-bottom: 40px;
         max-width: 800px;
 
@@ -44,6 +44,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            min-width: 140px;
 
             .subtitle {
                 font-size: 12px;
@@ -52,20 +53,15 @@
         }
     }
 
-    .connectBttn {
+    .startBttn {
         font-size: 20px;
         font-weight: bold;
         padding: 20px 40px;
-        background-color: $coinbase-blue;
-        color: white;
+        background-color: #EEF0F3;
+        color: black;
         border-radius: 30px;
         border: none;
         outline: none;
         cursor: pointer;
-    }
-
-    .errorMsg {
-        color: red;
-        font-size: small;
     }
 }

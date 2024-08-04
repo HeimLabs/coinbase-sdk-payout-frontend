@@ -8,14 +8,17 @@
     align-items: center;
     justify-content: space-between;
 
+    img {
+        max-width: 400px;
+        height: auto;
+    }
+
     .walletContainer {
         .address {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px 40px;
-            background-color: $coinbase-blue;
-            color: white;
+            color: $paymaker-purple;
             border-radius: 30px;
             border: none;
             outline: none;

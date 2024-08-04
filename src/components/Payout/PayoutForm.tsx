@@ -5,8 +5,14 @@ import { addIcon, basescanIcon, crossIcon, subtractIcon } from "../../assets";
 import { toast } from "react-toastify";
 import { FormRow } from "../../types";
 import Papa from "papaparse";
-import { tokens } from "../../configs/tokens.config";
+import { tokens as _tokens } from "../../configs/tokens.config";
 import { useBatchPayout } from "../../hooks/wallet.hooks";
+import { useEnsLookup } from "../../hooks/ens.hooks";
+import { isAddress } from "viem";
+
+const maxRows = 200;
+
+const tokens = _tokens[import.meta.env.VITE_APP_APP_ENV == "production" ? "mainnet" : "testnet"];
 
 export default function PayoutForm(): React.JSX.Element {
     const [step, setStep] = useState(0);
@@ -17,8 +23,11 @@ export default function PayoutForm(): React.JSX.Element {
 
     const uploadCsvRef = useRef<HTMLInputElement>(null);
 
+    const { addressedRows, isError: isEnsError } = useEnsLookup(rows);
+
     const { tokenBalance } = useTokenBalance(selectedToken);
-    const { mutate: batchPayout, data: batchPayoutData, isPending, isSuccess, reset } = useBatchPayout(rows, selectedToken);
+    const { mutate: batchPayout, data: batchPayoutData, isPending, isSuccess, reset } = useBatchPayout(addressedRows, selectedToken);
+
 
     const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -111,7 +120,7 @@ export default function PayoutForm(): React.JSX.Element {
                     const parsedRows = results.data.map((row: any) => ({
                         wallet: row[0],
                         amount: row[1],
-                    })).slice(0, 6);
+                    })).slice(0, maxRows);
                     setRows(parsedRows);
                 },
             });
@@ -140,7 +149,7 @@ export default function PayoutForm(): React.JSX.Element {
                     <span>
                         <select name="token" id="token" onChange={handleTokenSelection} disabled={step != 0}>
                             {tokens.map((token, index) => (
-                            <option value={index}>{token.name}</option>
+                                <option value={index}>{token.name}</option>
                             ))}
                         </select>
                         : {tokenBalance.toLocaleString()} {selectedToken.symbol}
@@ -203,7 +212,12 @@ export default function PayoutForm(): React.JSX.Element {
                                                 <img src={basescanIcon} alt="basescan" />
                                             </a>))
                                         : null}
-                                    {row.wallet?.slice(0, 7) + "..." + row.wallet?.slice(-7)}
+                                    {(step == 1) &&
+                                        <div className={`${styles.inputContainer} ${!isAddress(addressedRows[index].wallet) ? styles.errorMsg : ""}`}>
+                                            {isAddress(addressedRows[index].wallet)
+                                                ? addressedRows[index].wallet?.slice(0, 7) + "..." + addressedRows[index].wallet?.slice(-7)
+                                                : addressedRows[index].wallet?.slice(0, 7) + "... | Invalid ENS/Address"}
+                                        </div>}
                                 </div>}
                             {/* AMOUNT */}
                             {step == 0 && <div className={styles.inputContainer}>
@@ -238,7 +252,7 @@ export default function PayoutForm(): React.JSX.Element {
                         </div>
                     }
                     <div className={styles.rowActions}>
-                        {(step == 0 && rows.length <= 5) &&
+                        {(step == 0 && rows.length <= maxRows) &&
                             <button type="button" className={`${styles.csvBttn} ${styles.addBttn}`} onClick={addRow}>
                                 <img src={addIcon} alt="Add" />
                             </button>}
@@ -248,10 +262,11 @@ export default function PayoutForm(): React.JSX.Element {
                             </button>}
                     </div>
                     {(step == 0 || step == 1) &&
-                        <button type="submit" className={`${styles.primaryBttn} ${isPending ? styles.shimmer : ""}`}>
+                        <button type="submit" disabled={isEnsError} className={`${styles.primaryBttn} ${isPending ? styles.shimmer : ""}`}>
                             {step == 0 && "Next"}
                             {step == 1 && "Confirm"}
                         </button>}
+                    {isEnsError && <span className={styles.errorMsg}>ENS Lookup Failed</span>}
                     {step == 2 &&
                         <button className={styles.csvBttn} onClick={handleCsvDownload}>
                             Download CSV
