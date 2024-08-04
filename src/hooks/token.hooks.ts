@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { tokens } from "../configs/tokens.config";
 import { useWallet } from "../context/wallet.context";
 
-const useTokenBalance = (selectedToken: typeof tokens[number]) => {
+const useTokenBalance = (selectedToken: typeof tokens['mainnet' | 'testnet'][number]) => {
     const { address } = useWallet();
     const { data: nativeBalance, } = useBalance({ address: address as `0x${string}` });
     const { data, ...readData } = useReadContract({
