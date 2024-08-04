@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles/Payout/Selector.module.scss";
 import { moneyTransferIcon, sendMoneyIcon, loading } from "../../assets";
-import { useAccount } from "wagmi";
 import QRCode from 'qrcode.react';
 import { useCreateOnrampLink } from "../../hooks/onramp.hooks";
+import { useWallet } from "../../context/wallet.context";
 
 type SelectorProps = {
     setStep: React.Dispatch<React.SetStateAction<number>>
 }
 
 export default function Selector({ setStep }: SelectorProps): React.JSX.Element {
-    const { address } = useAccount();
+    const { address } = useWallet();
     const { createOnrampLink, onrampLink, isPending } = useCreateOnrampLink(address);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
