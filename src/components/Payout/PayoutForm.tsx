@@ -190,7 +190,7 @@ export default function PayoutForm(): React.JSX.Element {
                         <div className={styles.row} key={index}>
                             {/* WALLET ADDRESS */}
                             {step == 0 && <div className={styles.inputContainer}>
-                                <span className={styles.rowHeader}>Wallet Address:</span>
+                                <span className={styles.rowHeader}>Wallet Address <span>(ENS/0xAddress)</span> :</span>
                                 <input
                                     type="text"
                                     name="wallet"
