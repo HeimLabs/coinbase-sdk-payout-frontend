@@ -1,15 +1,16 @@
 import { http, createConfig } from 'wagmi';
-import { baseSepolia } from 'wagmi/chains';
-import { coinbaseWallet } from 'wagmi/connectors';
+import { base, baseSepolia } from 'wagmi/chains';
 
 export const config = createConfig({
-    chains: [baseSepolia],
-    connectors: [
-        coinbaseWallet({ appName: 'Batch Payouts', preference: 'smartWalletOnly' }),
-    ],
-    transports: {
-        [baseSepolia.id]: http(),
-    },
+    chains: [import.meta.env.VITE_APP_APP_ENV == "production" ? base : baseSepolia],
+    // @ts-ignore
+    transports: import.meta.env.VITE_APP_APP_ENV == "production"
+        ? {
+            [base.id]: http(),
+        }
+        : {
+            [baseSepolia.id]: http(),
+        },
 });
 
 declare module 'wagmi' {

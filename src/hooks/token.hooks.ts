@@ -1,10 +1,12 @@
-import { useBalance, useReadContract } from "wagmi";
+import { useBalance, useChains, useReadContract, useSwitchChain } from "wagmi";
 import { erc20Abi } from "viem";
 import { useEffect } from "react";
 import { tokens } from "../configs/tokens.config";
 import { useWallet } from "../context/wallet.context";
 
 const useTokenBalance = (selectedToken: typeof tokens['mainnet' | 'testnet'][number]) => {
+    const [chain] = useChains();
+    const { switchChain } = useSwitchChain();
     const { address } = useWallet();
     const { data: nativeBalance, } = useBalance({ address: address as `0x${string}` });
     const { data, ...readData } = useReadContract({
@@ -19,6 +21,11 @@ const useTokenBalance = (selectedToken: typeof tokens['mainnet' | 'testnet'][num
         functionName: "decimals",
     });
     const returnedData = data as bigint;
+
+    // @fix - need to force wagmi to switch to configured chain
+    useEffect(() => {
+        switchChain({ chainId: chain.id });
+    }, [chain]);
 
     useEffect(() => {
         console.log("returnedData: ", returnedData);
