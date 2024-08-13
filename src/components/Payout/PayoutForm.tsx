@@ -212,7 +212,7 @@ export default function PayoutForm(): React.JSX.Element {
                                                 <img src={basescanIcon} alt="basescan" />
                                             </a>))
                                         : null}
-                                    {(step == 1) &&
+                                    {(step == 1 || step == 2) &&
                                         <div className={`${styles.inputContainer} ${!isAddress(addressedRows[index].wallet) ? styles.errorMsg : ""}`}>
                                             {isAddress(addressedRows[index].wallet)
                                                 ? addressedRows[index].wallet?.slice(0, 7) + "..." + addressedRows[index].wallet?.slice(-7)
