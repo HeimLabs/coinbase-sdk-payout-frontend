@@ -10,7 +10,7 @@ import { useBatchPayout } from "../../hooks/wallet.hooks";
 import { useEnsLookup } from "../../hooks/ens.hooks";
 import { isAddress } from "viem";
 
-const maxRows = 200;
+const maxRows = 5;
 
 const tokens = _tokens[import.meta.env.VITE_APP_APP_ENV == "production" ? "mainnet" : "testnet"];
 
@@ -98,7 +98,7 @@ export default function PayoutForm(): React.JSX.Element {
     }
 
     const addRow = () => {
-        if (rows.length <= 5)
+        if (rows.length <= maxRows)
             setRows([...rows, { wallet: '', amount: '' }]);
         else
             toast.error("Too many rows!");
@@ -252,7 +252,7 @@ export default function PayoutForm(): React.JSX.Element {
                         </div>
                     }
                     <div className={styles.rowActions}>
-                        {(step == 0 && rows.length <= maxRows) &&
+                        {(step == 0 && rows.length < maxRows) &&
                             <button type="button" className={`${styles.csvBttn} ${styles.addBttn}`} onClick={addRow}>
                                 <img src={addIcon} alt="Add" />
                             </button>}
