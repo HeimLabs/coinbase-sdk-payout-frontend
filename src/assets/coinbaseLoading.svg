@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800" fill="none">
+  <g clip-path="url(#clip0_1585_286)">
+    <path d="M400 800C620.914 800 800 620.914 800 400C800 179.086 620.914 0 400 0C179.086 0 0 179.086 0 400C0 620.914 179.086 800 400 800Z" fill="#0052FF"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M402.5 600C512.681 600 602 510.457 602 400C602 289.543 512.681 200 402.5 200C292.319 200 203 289.543 203 400C203 510.457 292.319 600 402.5 600ZM401.5 518C460.871 518 509 465.393 509 400.5C509 335.607 460.871 283 401.5 283C342.129 283 294 335.607 294 400.5C294 465.393 342.129 518 401.5 518Z" fill="white"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M162 162H631V355H405V444H631V638H162V162ZM632 444V638V639H631H162H161V638V162V161H162H631H632V162V355V444Z" fill="#0052FF">
+      <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 400 400" to="360 400 400" dur="1s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  <defs>
+    <clipPath id="clip0_1585_286">
+      <rect width="800" height="800" fill="white"/>
+    </clipPath>
+  </defs>
+</svg>

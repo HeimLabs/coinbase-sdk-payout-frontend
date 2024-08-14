@@ -153,6 +153,9 @@
 }
 
 .primaryBttn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     outline: none;
     background-color: $coinbase-blue;
@@ -166,8 +169,13 @@
     }
 
     &:disabled {
-        background-color: lighten($coinbase-blue, 20%);
+        opacity: 0.6;
         pointer-events: none;
+    }
+
+    img {
+        width: 30px;
+        height: auto;
     }
 }
 

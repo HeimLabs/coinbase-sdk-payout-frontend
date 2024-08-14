@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "../../styles/Payout/PayoutForm.module.scss";
 import { useTokenBalance } from "../../hooks/token.hooks";
-import { addIcon, basescanIcon, crossIcon, subtractIcon } from "../../assets";
+import { addIcon, basescanIcon, coinbaseLoading, crossIcon, subtractIcon } from "../../assets";
 import { toast } from "react-toastify";
 import { FormRow } from "../../types";
 import Papa from "papaparse";
@@ -262,9 +262,10 @@ export default function PayoutForm(): React.JSX.Element {
                             </button>}
                     </div>
                     {(step == 0 || step == 1) &&
-                        <button type="submit" disabled={isEnsError} className={`${styles.primaryBttn} ${isPending ? styles.shimmer : ""}`}>
-                            {step == 0 && "Next"}
-                            {step == 1 && "Confirm"}
+                        <button type="submit" disabled={isEnsError || isPending} className={`${styles.primaryBttn}`}>
+                            {isPending && <img src={coinbaseLoading} alt="loading" />}
+                            {(step == 0 && !isPending) && "Next"}
+                            {(step == 1 && !isPending) && "Confirm"}
                         </button>}
                     {isEnsError && <span className={styles.errorMsg}>ENS Lookup Failed</span>}
                     {step == 2 &&

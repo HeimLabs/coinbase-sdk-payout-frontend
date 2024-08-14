@@ -8,3 +8,4 @@ export { default as moneyTransferIcon } from "./moneyTransfer.png";
 export { default as sendMoneyIcon } from "./sendMoney.png";
 export { default as loading } from "./loading.svg";
 export { default as backIcon } from "./back.png";
+export { default as coinbaseLoading } from "./coinbaseLoading.svg";
