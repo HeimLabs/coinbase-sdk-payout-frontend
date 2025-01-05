@@ -23,4 +23,16 @@ export const tokens = {
             address: "0x0000000000000000000000000000000000000000"
         }
     ]
-}
+};
+
+const newToken = {
+    name: 'NewToken',
+    symbol: 'NTK',
+    decimals: 18,
+    address: '0x1234567890abcdef1234567890abcdef12345678'
+};
+
+export default {
+    tokens,
+    newToken
+};

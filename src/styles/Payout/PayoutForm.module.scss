@@ -136,6 +136,28 @@
     }
 }
 
+.newTokenContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    margin-top: 20px;
+
+    label {
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    input {
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid lightgray;
+        outline: none;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
 .csvBttn {
     border: none;
     outline: none;

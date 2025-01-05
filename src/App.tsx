@@ -4,6 +4,7 @@ import GetStarted from './components/GetStarted';
 import { useState } from 'react';
 import styles from "./styles/Layout.module.scss";
 import { useWallet } from './context/wallet.context';
+import { newToken } from './configs/tokens.config';
 
 function App() {
     const { isConnected } = useWallet()
@@ -23,6 +24,10 @@ function App() {
     return (
         <div className={styles.main}>
             {setupPage()}
+            <div>
+                <h1>NewToken Integration</h1>
+                <p>Address: {newToken.address}</p>
+            </div>
         </div>
     )
 

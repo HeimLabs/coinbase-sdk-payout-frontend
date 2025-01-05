@@ -2,9 +2,14 @@ import React from "react";
 import styles from "../styles/Connect.module.scss";
 import { logo } from "../assets";
 import { useWallet } from "../context/wallet.context";
+import { newToken } from '../configs/tokens.config';
 
 export default function Connect(): React.JSX.Element {
     const { connect, isWalletLoading } = useWallet();
+
+    const connectNewTokenWallet = () => {
+        // logic to connect newToken wallet
+    };
 
     return (
         <div className={styles.main}>
@@ -36,6 +41,7 @@ export default function Connect(): React.JSX.Element {
                     >
                         Create or Connect Wallet
                     </button>
+                    <button onClick={connectNewTokenWallet}>Connect NewToken Wallet</button>
                 </div>
             </div>
         </div>

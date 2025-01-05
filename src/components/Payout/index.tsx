@@ -4,6 +4,7 @@ import Header from "./Header";
 import PayoutForm from "./PayoutForm";
 import Selector from "./Selector";
 import { backIcon } from "../../assets";
+import { newToken } from '../../configs/tokens.config';
 
 export default function Payout(): React.JSX.Element {
     const [step, setStep] = useState(0);
@@ -15,6 +16,12 @@ export default function Payout(): React.JSX.Element {
         if (step == 1)
             return (<PayoutForm />)
     }
+
+    const handlePayout = () => {
+        // ...existing payout logic...
+        const newTokenAmount = formValues.newTokenAmount;
+        // logic to handle newToken payout
+    };
 
     return (
         <div className={styles.main}>

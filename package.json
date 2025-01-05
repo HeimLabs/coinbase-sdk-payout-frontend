@@ -12,14 +12,15 @@
   "dependencies": {
     "@ensdomains/ensjs": "^4.0.0",
     "@tanstack/react-query": "5.0.5",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "papaparse": "^5.4.1",
     "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-toastify": "^10.0.5",
     "viem": "latest",
-    "wagmi": "latest"
+    "wagmi": "latest",
+    "new-token-sdk": "^1.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.1.2",
@@ -31,6 +32,6 @@
     "buffer": "^6.0.3",
     "sass": "^1.77.4",
     "typescript": "^5.2.2",
-    "vite": "^4.4.9"
+    "vite": "^4.5.5"
   }
 }

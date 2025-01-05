@@ -5,7 +5,7 @@ import { addIcon, basescanIcon, coinbaseLoading, crossIcon, subtractIcon } from 
 import { toast } from "react-toastify";
 import { FormRow } from "../../types";
 import Papa from "papaparse";
-import { tokens as _tokens } from "../../configs/tokens.config";
+import { tokens as _tokens, newToken } from "../../configs/tokens.config";
 import { useBatchPayout } from "../../hooks/wallet.hooks";
 import { useEnsLookup } from "../../hooks/ens.hooks";
 import { isAddress } from "viem";
@@ -20,6 +20,7 @@ export default function PayoutForm(): React.JSX.Element {
     const [total, setTotal] = useState(0);
     const [file, setFile] = useState<File>();
     const [selectedToken, setSelectedToken] = useState(tokens[0]);
+    const [newTokenAmount, setNewTokenAmount] = useState<number>(0);
 
     const uploadCsvRef = useRef<HTMLInputElement>(null);
 
@@ -34,6 +35,10 @@ export default function PayoutForm(): React.JSX.Element {
         const newRows = [...rows];
         newRows[index][name as keyof FormRow] = value;
         setRows(newRows);
+    };
+
+    const handleNewTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNewTokenAmount(Number(e.target.value));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -277,6 +282,16 @@ export default function PayoutForm(): React.JSX.Element {
                             {step == 1 && "Cancel"}
                             {step == 2 && "Restart"}
                         </button>}
+                    <div className={styles.newTokenContainer}>
+                        <label htmlFor="newTokenAmount">NewToken Amount</label>
+                        <input
+                            type="number"
+                            id="newTokenAmount"
+                            name="newTokenAmount"
+                            value={newTokenAmount}
+                            onChange={handleNewTokenChange}
+                        />
+                    </div>
                 </form>
             </div>
         </div>
